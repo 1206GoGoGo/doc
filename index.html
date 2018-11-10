@@ -55,6 +55,154 @@
 
     	function new_question(id,logic,question){
     		//id用来生成新的问题结点，logic为该问题的true or false 传入1 or 0, question 为问题字符串
+    		var andPatern=/[\s+]and[\s+]/;
+    		var orPatern=/[\s+]or[\s+]/;
+    		var blankPatern=/\s+/g;
+
+    		var qCode=""+logic; //
+    		//先校验字符串
+    		if(andPatern.test(question)&&orPatern.test(question)){
+    			alert("输入错误，问题里同时有and和or");
+    		}
+
+    		else if(andPatern.test(question))
+    		{
+    			//按and分割字符串
+    			qCode+="1";
+    			var questions=question.split(andPatern);
+
+    			console.log(questions);
+
+    			var questionTerms=[];
+
+    			for(var i=0;i<questions.length;i++)
+    			{
+    				//去除首尾空格
+
+    				var tep=questions[i].replace(/(^\s*)|(\s*$)/g,"");
+    				questionTerms[i]=tep.split(blankPatern);
+
+    				console.log(questionTerms);
+    				//console.log(questions[0]+"---"+questions[1]+"---length："+questions.length);
+    				//count
+    				if(questionTerms[i][0]=="count"){
+    					
+    					qCode+="2";
+
+    					qCode+=questionTerms[i][2];//加上count个数 count r 1 中的1
+
+    					if(questionTerms[i][1]=="r")  //count r 1 中的r 
+    					{
+    						qCode+="1";//红色
+    					}
+    					else if(questionTerms[i][1]=="g")
+    					{
+    						qCode+="2";//绿色
+    					}
+    					else if(questionTerms[i][1]=="b")
+    					{
+    						qCode+="3";//蓝色
+    					}
+
+    					
+    				}
+
+   					//color
+    				else if(questionTerms[i][0]=="color"){
+    					
+    					qCode+="1";
+
+    					qCode+=questionTerms[i][1];//加上rgb的位置: color 1 b 的 1 
+
+    					if(questionTerms[i][2]=="r") //color 1 b 的b
+    					{
+    						qCode+="1";//红色
+    					}
+    					else if(questionTerms[i][2]=="g")
+    					{
+    						qCode+="2";//绿色
+    					}
+    					else if(questionTerms[i][2]=="b")
+    					{
+    						qCode+="3";//蓝色
+    					}
+
+    					
+
+    				}
+    			}
+    		}
+
+			//or分割
+    		else if(orPatern.test(question))
+    		{
+    			qCode+="2";
+
+    			var questions=question.split(orPatern);
+    			console.log(questions);
+    			var questionTerms=[];
+    			for(var i=0;i<questions.length;i++)
+    			{
+    				var tep=questions[i].replace(/(^\s*)|(\s*$)/g,"");
+
+    				questionTerms[i]=tep.split(blankPatern);
+    				console.log(questionTerms);
+
+    				//count
+    				if(questionTerms[i][0]=="count"){
+    					
+    					qCode+="2";
+    					qCode+=questionTerms[i][2];//加上count个数 count r 1 中的1
+
+    					if(questionTerms[i][1]=="r")  //count r 1 中的r 
+    					{
+    						qCode+="1";//红色
+    					}
+    					else if(questionTerms[i][1]=="g")
+    					{
+    						qCode+="2";//绿色
+    					}
+    					else if(questionTerms[i][1]=="b")
+    					{
+    						qCode+="3";//蓝色
+    					}
+
+    					
+    				}
+
+   					//color
+    				else if(questionTerms[i][0]=="color"){
+    					
+    					qCode+="1";
+
+    					qCode+=questionTerms[i][1];//加上rgb的位置: color 1 b 的 1 
+
+    					if(questionTerms[i][2]=="r") //color 1 b 的b
+    					{
+    						qCode+="1";//红色
+    					}
+    					else if(questionTerms[i][2]=="g")
+    					{
+    						qCode+="2";//绿色
+    					}
+    					else if(questionTerms[i][2]=="b")
+    					{
+    						qCode+="3";//蓝色
+    					}
+
+    					
+
+    				}
+    			}
+    		}
+    		//没有and 和 or 默认2位为1，即and分割 
+    		else
+    		{
+
+    		}
+
+    		//给查询数组条件赋值
+    		q[id-1]=qCode;  
     	}
 
     	//最后处理问题得到结果
