@@ -9,6 +9,12 @@
       提问的总数：<span id="count"></span>
       错误答案数量：<input type="text" name="count_err" id="count_err"/>
 
+      <button type="button" onclick="test_click()">555</button>
+
+      <div id="question">
+          
+      </div>
+<!--
       <div class="question_item">
       	第<span id="index1">1</span>个问题: <input type="text" name="count" style="width:500px;"/>
       	<select name="result">
@@ -18,7 +24,7 @@
 		</select>
 		<button type="button" onclick="new_question(parseInt(document.getElementById('index1').innerText)+1, 0, "str")">处理下一个问题</button>
       </div>
-
+-->
       <div id="question2">
       </div>
 
@@ -26,6 +32,9 @@
 	</form>
 
 	<div id="answer"></div>
+
+
+
 
     <script type="text/javascript">
 
@@ -35,7 +44,7 @@
     	//第二位1：与，2或
     	//第3~5位：color1/count2，number0~9(然后加1)，color：123rgb...
     	var q = new Array(10);//每个球在每轮循环中的颜色
-    	q[0]="11241272";
+    	/*q[0]="11241272";
     	q[1]="11113121133";
     	q[2]="12112142";
     	q[3]="";
@@ -45,14 +54,41 @@
     	q[7]="";
     	q[8]="";
     	q[9]="";
+        */
     	var count=0;
+
+
     	while(!(count>0 && count <=20)){ //判断是否正确输入了问题个数
 	    	count=prompt("请输入你提问的数量(<=20&&>0)","");
 	    	if(count>0 && count <=20){
 	    		document.getElementById("count").innerText=count;
+                var str="";
+                for(var jjj_count=0;jjj_count<count;jjj_count++)
+                {
+                    str+="<div class='question_item'>"
+                    +"第<span id='index"+jjj_count+"'>"+(jjj_count+1)+"</span>个问题: <input id='input"+jjj_count+"' type='text' name='count' style='width:500px;'/>"
+                    +"<select name='result' id='"+"select"+jjj_count+"'>"
+                    +"<option value=''>选择对错</option>"
+                    +"<option value='1'>true</option>"
+                    +"<option value='0'>false</option>"
+                    +"</select>"
+                    +"<button type='button' onclick=\"new_question(parseInt(document.getElementById(\'index"+jjj_count+"\').innerText)+1, parseInt(document.getElementById(\'select"+jjj_count+"\').options[document.getElementById(\'select"+jjj_count+"\').selectedIndex].value), document.getElementById(\'input"+jjj_count+"\').value)\">确定回答问题</button></div>";
+
+                }
+                
+                document.getElementById("question").innerHTML=str;
+
 	    	}
+
     	}
 
+
+
+       function test_click(){
+         console.log(str);
+       }
+      
+            
     	function new_question(id,logic,question){
     		//id用来生成新的问题结点，logic为该问题的true or false 传入1 or 0, question 为问题字符串
     		var andPatern=/[\s+]and[\s+]/;
@@ -60,6 +96,8 @@
     		var blankPatern=/\s+/g;
 
     		var qCode=""+logic; //
+            console.log("进入字符串裁剪");
+            console.log("id:"+id+"logic"+logic+"question"+question);
     		//先校验字符串
     		if(andPatern.test(question)&&orPatern.test(question)){
     			alert("输入错误，问题里同时有and和or");
@@ -199,10 +237,75 @@
     		else
     		{
 
+                //按and分割字符串
+                qCode+="1";
+                var questions=question.split(andPatern);
+
+                console.log(questions);
+
+                var questionTerms=[];
+
+                for(var i=0;i<questions.length;i++)
+                {
+                    //去除首尾空格
+
+                    var tep=questions[i].replace(/(^\s*)|(\s*$)/g,"");
+                    questionTerms[i]=tep.split(blankPatern);
+
+                    console.log(questionTerms);
+                    //console.log(questions[0]+"---"+questions[1]+"---length："+questions.length);
+                    //count
+                    if(questionTerms[i][0]=="count"){
+                        
+                        qCode+="2";
+
+                        qCode+=questionTerms[i][2];//加上count个数 count r 1 中的1
+
+                        if(questionTerms[i][1]=="r")  //count r 1 中的r 
+                        {
+                            qCode+="1";//红色
+                        }
+                        else if(questionTerms[i][1]=="g")
+                        {
+                            qCode+="2";//绿色
+                        }
+                        else if(questionTerms[i][1]=="b")
+                        {
+                            qCode+="3";//蓝色
+                        }
+
+                        
+                    }
+
+                    //color
+                    else if(questionTerms[i][0]=="color"){
+                        
+                        qCode+="1";
+
+                        qCode+=questionTerms[i][1];//加上rgb的位置: color 1 b 的 1 
+
+                        if(questionTerms[i][2]=="r") //color 1 b 的b
+                        {
+                            qCode+="1";//红色
+                        }
+                        else if(questionTerms[i][2]=="g")
+                        {
+                            qCode+="2";//绿色
+                        }
+                        else if(questionTerms[i][2]=="b")
+                        {
+                            qCode+="3";//蓝色
+                        }
+
+                        
+
+                    }
+                }
+            
     		}
 
     		//给查询数组条件赋值
-    		q[id-1]=qCode;  
+    		q[id-2]=qCode;  
     	}
 
     	//最后处理问题得到结果
