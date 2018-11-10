@@ -6,23 +6,21 @@
   
   <body>
     <form action="" method="get">
-      提问的总数：<span id="count"></span></br>
+      提问的总数：<span id="count"></span>
       错误答案数量：<input type="text" name="count_err" id="count_err"/>
+
       <div class="question_item">
-      	<!--每一个问题为一个item-->
-      	第<span id="index1">1</span>个问题: <input type="text" name="count" style="width:300px;"/>
-
-		<span id="item1"></span>
-			<button type="button" onclick="new_item(1)">+</button>
-			<button type="button">提问结束/回答问题对错</button>
-
-			<button type="button" onclick="new_question(parseInt(document.getElementById('index1').innerText)+1)">处理下一个问题</button>
-
+      	第<span id="index1">1</span>个问题: <input type="text" name="count" style="width:500px;"/>
+      	<select name="result">
+				<option value="">选择对错</option>
+				<option value="1">true</option>
+				<option value="0">false</option>
+		</select>
+		<button type="button" onclick="new_question(parseInt(document.getElementById('index1').innerText)+1, 0, "str")">处理下一个问题</button>
       </div>
+
       <div id="question2">
-      	
       </div>
-
 
 	  <input type="button" value="提交" onclick="dealwith()" />
 	</form>
@@ -52,11 +50,11 @@
 	    	count=prompt("请输入你提问的数量(<=20&&>0)","");
 	    	if(count>0 && count <=20){
 	    		document.getElementById("count").innerText=count;
-
-	    		for(i=0;i<count-1;i++){
-	    			//init_question(i+2);
-	    		}
 	    	}
+    	}
+
+    	function new_question(id,logic,question){
+    		//id用来生成新的问题结点，logic为该问题的true or false 传入1 or 0, question 为问题字符串
     	}
 
     	//最后处理问题得到结果
