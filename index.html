@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>pair programming</title>
+  </head>
+  
+  <body>
+    <form action="" method="get">
+      提问的总数：<span id="count"></span></br>
+      错误答案数量：<input type="text" name="count_err" id="count_err"/>
+      <div class="question_item">
+      	<!--每一个问题为一个item-->
+      	第<span id="index1">1</span>个问题: <input type="text" name="count" style="width:300px;"/>
+
+		<span id="item1"></span>
+			<button type="button" onclick="new_item(1)">+</button>
+			<button type="button">提问结束/回答问题对错</button>
+
+			<button type="button" onclick="new_question(parseInt(document.getElementById('index1').innerText)+1)">处理下一个问题</button>
+
+      </div>
+      <div id="question2">
+      	
+      </div>
+
+
+	  <input type="button" value="提交" onclick="dealwith()" />
+	</form>
+
+	<div id="answer"></div>
+
+    <script type="text/javascript">
+
+    	var b = new Array(10);//每个球可能的颜色，最后的结果
+    	//假设有3个问题
+    	//第一位0:false, 1:true
+    	//第二位1：与，2或
+    	//第3~5位：color1/count2，number0~9(然后加1)，color：123rgb...
+    	var q = new Array(10);//每个球在每轮循环中的颜色
+    	q[0]="11241272";
+    	q[1]="11113121133";
+    	q[2]="12112142";
+    	q[3]="";
+    	q[4]="";
+    	q[5]="";
+    	q[6]="";
+    	q[7]="";
+    	q[8]="";
+    	q[9]="";
+    	var count=0;
+    	while(!(count>0 && count <=20)){ //判断是否正确输入了问题个数
+	    	count=prompt("请输入你提问的数量(<=20&&>0)","");
+	    	if(count>0 && count <=20){
+	    		document.getElementById("count").innerText=count;
+
+	    		for(i=0;i<count-1;i++){
+	    			//init_question(i+2);
+	    		}
+	    	}
+    	}
+
+    	//最后处理问题得到结果
+    	function dealwith(){
+    		//count;总的问题数
+    		var a = new Array(10);//每个球在每轮循环中的颜色
+    		for(z=0;z<10;z++){
+    			b[z]="";
+    		}
+    		var count_err=parseInt(document.getElementById("count_err").value);//获取错误问题的数量
+    		var count=parseInt(document.getElementById("count").innerText);
+    		for(e=1;e<=3;e++){
+    			a[0]=e;
+    			for(f=1;f<=3;f++){
+    				a[1]=f;
+    				for(g=1;g<=3;g++){
+    					a[2]=g;
+    					for(h=1;h<=3;h++){
+    						a[3]=h;
+    						for(i=1;i<=3;i++){
+    							a[4]=i;
+    							for(j=1;j<=3;j++){
+    								a[5]=j;
+    								for(k=1;k<=3;k++){
+    									a[6]=k;
+    									for(l=1;l<=3;l++){
+    										a[7]=l;
+    										for(m=1;m<=3;m++){
+    											a[8]=m;
+    											for(n=1;n<=3;n++){
+    												a[9]=n;
+	    											//判断错误答案的数量是否满足条件，满足，将对应颜色或到b[10]数组中
+	    											var err_this_count=0;
+
+	    											//var c=0;
+	    											for(c=0;c<count;c++){//对问题循环
+	    												//console.log(count+"    "+c);
+	    												//判断某一问题的在该轮循环中真实的真假，与回答中的真假是否一致
+	    												var ind=2;
+	    												var pipei='0';//判断回答和实际是否匹配,1表示true 0表示false
+	    												var logic=q[c].charAt(1); //1与2或
+	    												if(logic=='1'){
+	    													//与条件
+	    													pipei='1';
+		    												while(q[c].length-2>ind){
+		    													//对一个问题中的分支进行处理
+	    														color=q[c].charAt(ind+2);
+	    														in_count=q[c].charAt(ind+1);
+		    													if(q[c].charAt(ind)=='2'){
+		    														//color的数量问题
+		    														var color_this_count=0;
+		    														for(ha=0;ha<10;ha++){
+		    															if(a[ha]==color){color_this_count++;}
+		    														}
+		    														if(color_this_count==in_count){
+		    															//该分支条件是正确的
+		    														}else{
+		    															pipei='0';
+		    															break;
+		    														}
+		    													}else{
+		    														//第几个的颜色问题
+		    														if(a[in_count-1]==color){
+		    															//该分支条件正确
+		    														}else{
+		    															pipei='0';
+		    															break;
+		    														}
+		    													}
+
+		    													ind+=3;//下一次循环
+		    												}
+	    												}else{
+	    													//或条件
+	    													pipei="0";
+		    												while(q[c].length-2>ind){
+		    													//对一个问题中的分支进行处理
+	    														color=q[c].charAt(ind+2);
+	    														in_count=q[c].charAt(ind+1);
+		    													if(q[c].charAt(ind)=='2'){
+		    														//color的数量问题
+		    														var color_this_count=0;
+		    														for(ha=0;ha<10;ha++){
+		    															if(a[ha]==color){color_this_count++;}
+		    														}
+		    														if(color_this_count==in_count){
+		    															//该分支条件是正确的
+		    															pipei="1";
+		    															break;
+		    														}
+		    													}else{
+		    														//第几个的颜色问题
+		    														if(a[in_count-1]==color){
+		    															//该分支条件正确
+		    															pipei="1";
+		    															break;
+		    														}
+		    													}
+
+		    													ind+=3;//下一次循环
+		    												}
+	    												}
+
+	    												if(pipei!=q[c].charAt(0)){//不一致
+	    													err_this_count++;//错误计数加1
+															//console.log(count_err+" "+err_this_count);
+
+															if(err_this_count>count_err)break;//一定不会相等便提前结束
+	    												}
+	    											}
+													//判断问题的错误数和实际输入的错误数是否一致
+													if(count_err==err_this_count){//一致
+														//处理可能颜色的合并问题
+														//alert("a step");
+														for(d=0;d<10;d++){
+															if(b[d].indexOf(a[d])==-1){//判断可能出现的颜色中是否已经存在可能的颜色
+																//并
+																b[d]+=a[d];
+															}
+														}
+													}
+
+    											}
+    										}
+    									}
+    								}
+    							}
+    						}
+    					}
+    				}
+    			}
+    		}
+
+    		var result="";
+    		for(it=0;it<10;it++){
+    			if(b[it].indexOf("1")!=-1)result+="r";
+    			if(b[it].indexOf("2")!=-1)result+="g";
+    			if(b[it].indexOf("3")!=-1)result+="b";
+    			result+=",";
+    		}
+
+    		document.getElementById("answer").innerText=result;
+    	}
+    </script>
+  </body>
+</html>
